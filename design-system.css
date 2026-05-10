@@ -1,0 +1,554 @@
+/* ═══════════════════════════════════════════════════════════════
+   SOCIAL NORMS — Design System
+   The single source of truth for all visual decisions.
+
+   Every color, size, spacing value, and motion token in the
+   Social Norms ecosystem references this file.
+
+   Reference: VISUAL-DIRECTION.md for design rationale.
+═══════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. IMPORT FONTS
+───────────────────────────────────────────────────────────────
+   Sarabun: Primary typeface. Thai + Latin.
+   Supports full weight range 100–800.
+───────────────────────────────────────────────────────────────  */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap');
+
+
+/* ─────────────────────────────────────────────────────────────
+   2. DESIGN TOKENS
+───────────────────────────────────────────────────────────────
+   All values live here as CSS custom properties.
+   Reference these everywhere — never hard-code values.
+───────────────────────────────────────────────────────────────  */
+:root {
+
+  /* ── Color: Background Layers ──────────────────────────────
+     Five warm darks from deepest to shallowest.
+     The subtle differences create depth without heavy borders.
+  */
+  --bg-void:       #0C0C0C;   /* Deepest. Behind the hero. Footer. */
+  --bg-base:       #131313;   /* Main page background. */
+  --bg-surface:    #1A1A1A;   /* Sections with elevated presence. */
+  --bg-raised:     #222222;   /* Cards, containers, boxes. */
+  --bg-overlay:    #2C2C2C;   /* Tags, active items, hover backgrounds. */
+  --bg-highlight:  #363636;   /* Subtle hover on cards. */
+
+  /* ── Color: Amber (The Signal) ─────────────────────────────
+     Appears only when something matters.
+     Use sparingly — each appearance must feel earned.
+  */
+  --amber-900:     #3D2208;   /* Deepest amber tint. Background only. */
+  --amber-800:     #6B3D11;   /* Dark amber. Hover on amber bg elements. */
+  --amber-700:     #8B4F16;   /* Used for amber-dark contexts. */
+  --amber-600:     #A85C1A;   /* Muted amber. Secondary amber text on light. */
+  --amber:         #D47A2A;   /* The signal. Primary amber. */
+  --amber-400:     #E0944A;   /* Brighter amber. Icon tints, warm accents. */
+  --amber-300:     #E8A45A;   /* Light amber. Text on dark amber backgrounds. */
+  --amber-200:     #F2C490;   /* Pale amber. Very light text/icons. */
+
+  /* ── Color: Amber Transparency ─────────────────────────────
+     For backgrounds, glows, and subtle tints.
+  */
+  --amber-tint-8:  rgba(212, 122, 42, 0.08);   /* Barely visible tint */
+  --amber-tint-12: rgba(212, 122, 42, 0.12);   /* Subtle section backgrounds */
+  --amber-tint-20: rgba(212, 122, 42, 0.20);   /* Visible glow (key point boxes) */
+  --amber-tint-30: rgba(212, 122, 42, 0.30);   /* Strong tint (hover states) */
+  --amber-glow-sm: 0 4px 24px rgba(212, 122, 42, 0.18);  /* Button hover glow */
+  --amber-glow-md: 0 8px 40px rgba(212, 122, 42, 0.25);  /* Focus glow */
+
+  /* ── Color: Text ────────────────────────────────────────────
+     Warm whites and grays, not pure white or cold gray.
+     Warm tones read softer on dark backgrounds.
+  */
+  --text-primary:   #F0EDE8;   /* Main content. Slightly warm white. */
+  --text-secondary: #A8A49E;   /* Supporting content. */
+  --text-muted:     #706C66;   /* Labels, metadata, captions. */
+  --text-ghost:     #3C3935;   /* Very subtle text. Decorative only. */
+  --text-inverse:   #1A1A1A;   /* Text on light backgrounds. */
+  --text-inverse-2: #4A4742;   /* Secondary text on light backgrounds. */
+
+  /* ── Color: Borders ─────────────────────────────────────────
+     Subtle boundaries. Never heavy. Depth comes from bg layers.
+  */
+  --border-subtle:  rgba(255, 255, 255, 0.04);
+  --border-default: rgba(255, 255, 255, 0.08);
+  --border-medium:  rgba(255, 255, 255, 0.14);
+  --border-strong:  rgba(255, 255, 255, 0.22);
+  --border-amber:   rgba(212, 122, 42, 0.50);
+  --border-amber-strong: rgba(212, 122, 42, 0.85);
+
+  /* ── Color: Light Section ────────────────────────────────────
+     Used sparingly — one or two sections max per page.
+     Should feel like surfacing for air.
+  */
+  --surface-light:     #F5F2ED;   /* Light section background */
+  --surface-light-2:   #EDE9E3;   /* Cards on light sections */
+  --surface-light-3:   #E3DED7;   /* Borders on light sections */
+  --text-on-light:     #1A1A1A;   /* Primary text on light */
+  --text-on-light-2:   #4A4742;   /* Secondary text on light */
+  --text-on-light-3:   #888078;   /* Muted text on light */
+
+  /* ── Color: Semantic ─────────────────────────────────────────
+  */
+  --success: #3D9E50;
+  --success-tint: rgba(61, 158, 80, 0.12);
+  --error: #D94040;
+  --error-tint: rgba(217, 64, 64, 0.12);
+
+  /* ─────────────────────────────────────────────────────────── */
+
+
+  /* ── Typography: Families ───────────────────────────────────
+  */
+  --font-sans: 'Sarabun', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+
+  /* ── Typography: Scale ───────────────────────────────────────
+     Based on Major Third (×1.25) from a 16px base.
+     For Thai text, generous sizes aid readability.
+  */
+  --text-2xs:  10px;
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
+  --text-md:   18px;   /* Preferred body size for Thai on desktop */
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  30px;
+  --text-3xl:  36px;
+  --text-4xl:  44px;
+  --text-5xl:  56px;
+  --text-6xl:  72px;
+  --text-hero: clamp(48px, 9vw, 96px);    /* Hero display — responsive */
+  --text-section: clamp(32px, 5vw, 56px); /* Section titles — responsive */
+  --text-card-title: clamp(20px, 2.5vw, 26px);
+
+  /* ── Typography: Weights ─────────────────────────────────────
+     Note: Avoid 500 in Sarabun. Jump from 400 to 600.
+  */
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  600;   /* Sarabun 600 = clean semibold */
+  --weight-bold:    700;
+  --weight-black:   800;   /* Used for display, numbers, key moments */
+
+  /* ── Typography: Line Heights ────────────────────────────────
+  */
+  --leading-none:    1;
+  --leading-tight:   1.15;  /* Display text */
+  --leading-snug:    1.35;  /* Headings */
+  --leading-normal:  1.6;   /* UI copy */
+  --leading-relaxed: 1.85;  /* Body text (optimal for Thai) */
+  --leading-loose:   2.1;   /* Small caption text */
+
+  /* ── Typography: Tracking (letter-spacing) ───────────────────
+     Display text needs tighter tracking.
+     Labels need open tracking.
+  */
+  --tracking-display: -0.03em;  /* Large display headlines */
+  --tracking-heading: -0.01em;  /* Section titles */
+  --tracking-normal:   0;        /* Body text */
+  --tracking-label:    0.12em;   /* ALL CAPS labels */
+  --tracking-caption:  0.08em;   /* Small uppercase captions */
+
+  /* ── Typography: Measure (max line length) ───────────────────
+  */
+  --measure-narrow: 480px;   /* Short copy, pullquotes */
+  --measure-body:   640px;   /* Body copy — ~65 chars */
+  --measure-wide:   820px;   /* Wide text blocks */
+
+  /* ─────────────────────────────────────────────────────────── */
+
+
+  /* ── Spacing ─────────────────────────────────────────────────
+     Base unit: 4px. All values are multiples of 4.
+     Use named tokens, not arbitrary px values.
+  */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+  --space-40:  160px;
+
+  /* ── Spacing: Section Padding ────────────────────────────────
+     Generous vertical breathing room between major sections.
+  */
+  --section-padding-y:        120px;  /* Desktop */
+  --section-padding-y-mobile:  72px;  /* Mobile */
+  --section-padding-x:         24px;  /* Horizontal page margin */
+
+  /* ─────────────────────────────────────────────────────────── */
+
+
+  /* ── Layout ──────────────────────────────────────────────────
+  */
+  --max-w-text:    640px;    /* Body copy blocks */
+  --max-w-content: 900px;    /* Focused content sections */
+  --max-w-layout:  1100px;   /* Main layout container */
+  --max-w-wide:    1360px;   /* Wide / full-bleed content */
+  --nav-height:    68px;
+
+  /* ── Border Radius ───────────────────────────────────────────
+  */
+  --radius-xs:  3px;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --radius-full: 9999px;
+
+  /* ─────────────────────────────────────────────────────────── */
+
+
+  /* ── Elevation (Shadows) ─────────────────────────────────────
+     On dark backgrounds, shadows need to be strong to read.
+     Always slightly warm-tinted (not pure gray/black).
+  */
+  --shadow-sm:    0 1px 4px rgba(0, 0, 0, 0.35);
+  --shadow-md:    0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg:    0 12px 40px rgba(0, 0, 0, 0.55);
+  --shadow-xl:    0 24px 64px rgba(0, 0, 0, 0.65);
+  --shadow-card:  0 2px 12px rgba(0, 0, 0, 0.40), 0 1px 4px rgba(0, 0, 0, 0.25);
+
+  /* ─────────────────────────────────────────────────────────── */
+
+
+  /* ── Motion ──────────────────────────────────────────────────
+     Intentional, not decorative.
+     Animate to reveal understanding, not to attract attention.
+  */
+
+  /* Durations */
+  --duration-instant: 80ms;    /* Focus rings, immediate state changes */
+  --duration-fast:    160ms;   /* Button presses, toggles */
+  --duration-normal:  280ms;   /* Hover transitions, accordion open */
+  --duration-slow:    480ms;   /* Scroll reveals, page transitions */
+  --duration-slower:  680ms;   /* Hero entrances, deliberate moments */
+
+  /* Easing functions */
+  /* Primary: Quick start, smooth deceleration. Feels weighted. */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  /* Subtle bounce: for elements that "arrive" with presence. Use sparingly. */
+  --ease-spring: cubic-bezier(0.34, 1.20, 0.64, 1);
+  /* Standard in-out */
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  /* Linear: Only for color/opacity fades where easing feels wrong */
+  --ease-linear: linear;
+
+  /* Scroll reveal defaults */
+  --reveal-translate-y: 18px;    /* Subtle upward movement on reveal */
+  --reveal-duration:    580ms;
+  --reveal-stagger:     80ms;    /* Delay between sibling reveals */
+
+  /* ─────────────────────────────────────────────────────────── */
+
+
+  /* ── Z-Index Layers ──────────────────────────────────────────
+     Named layers prevent z-index conflicts as codebase grows.
+  */
+  --z-below:   -1;
+  --z-base:     0;
+  --z-raised:   10;
+  --z-overlay:  100;
+  --z-nav:      200;
+  --z-modal:    300;
+  --z-toast:    400;
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   3. RESET
+─────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--text-base);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
+  background-color: var(--bg-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+input, textarea, select { font-family: inherit; }
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   4. TYPOGRAPHY BASE
+─────────────────────────────────────────────────────────────── */
+.type-display {
+  font-size: var(--text-hero);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+}
+.type-section {
+  font-size: var(--text-section);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-heading);
+}
+.type-title {
+  font-size: var(--text-card-title);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-heading);
+}
+.type-body {
+  font-size: var(--text-md);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-normal);
+}
+.type-body-sm {
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-relaxed);
+}
+.type-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+.type-caption {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--text-muted);
+}
+.type-data {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--weight-black);
+  letter-spacing: -0.02em;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   5. COLOR UTILITIES
+─────────────────────────────────────────────────────────────── */
+.text-amber       { color: var(--amber); }
+.text-amber-light { color: var(--amber-300); }
+.text-primary     { color: var(--text-primary); }
+.text-secondary   { color: var(--text-secondary); }
+.text-muted       { color: var(--text-muted); }
+.text-inverse     { color: var(--text-inverse); }
+.bg-void     { background-color: var(--bg-void); }
+.bg-base     { background-color: var(--bg-base); }
+.bg-surface  { background-color: var(--bg-surface); }
+.bg-raised   { background-color: var(--bg-raised); }
+.bg-overlay  { background-color: var(--bg-overlay); }
+.bg-light    { background-color: var(--surface-light); }
+
+
+/* ─────────────────────────────────────────────────────────────
+   6. LAYOUT UTILITIES
+─────────────────────────────────────────────────────────────── */
+.container {
+  max-width: var(--max-w-layout);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-padding-x);
+  padding-right: var(--section-padding-x);
+}
+.container-text {
+  max-width: var(--max-w-text);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-padding-x);
+  padding-right: var(--section-padding-x);
+}
+.container-content {
+  max-width: var(--max-w-content);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-padding-x);
+  padding-right: var(--section-padding-x);
+}
+.container-wide {
+  max-width: var(--max-w-wide);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--section-padding-x);
+  padding-right: var(--section-padding-x);
+}
+.section {
+  padding-top: var(--section-padding-y);
+  padding-bottom: var(--section-padding-y);
+}
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-6); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+@media (max-width: 900px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .grid-2.grid-2-persist { grid-template-columns: 1fr 1fr; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   7. COMPONENTS
+─────────────────────────────────────────────────────────────── */
+.label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: var(--space-3);
+}
+.label-muted { color: var(--text-muted); }
+.label-dark  { color: var(--amber-700); }
+
+.divider { height: 1px; background: var(--border-default); border: none; }
+.divider-subtle { background: var(--border-subtle); }
+.divider-light  { background: var(--surface-light-3); }
+.divider-amber  { background: var(--amber-tint-30); }
+
+.tag {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.05em;
+  padding: 4px 12px;
+  border-radius: var(--radius-xs);
+  line-height: 1.5;
+}
+.tag-amber   { background: var(--amber); color: #fff; }
+.tag-outline { background: transparent; border: 1px solid var(--border-amber); color: var(--amber-300); }
+.tag-subtle  { background: var(--bg-overlay); color: var(--text-secondary); }
+.tag-success { background: var(--success-tint); color: var(--success); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 14px var(--space-8);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--amber); border-color: var(--amber); color: #fff; }
+.btn-primary:hover { background: var(--amber-400); border-color: var(--amber-400); box-shadow: var(--amber-glow-sm); }
+.btn-secondary { background: transparent; border-color: var(--border-amber); color: var(--amber-300); }
+.btn-secondary:hover { background: var(--amber-tint-12); border-color: var(--amber); color: var(--amber); }
+.btn-ghost { background: transparent; border-color: var(--border-medium); color: var(--text-secondary); }
+.btn-ghost:hover { border-color: var(--border-strong); color: var(--text-primary); }
+.btn-white { background: #fff; border-color: #fff; color: var(--amber-800); }
+.btn-white:hover { background: var(--surface-light); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(0,0,0,0.18); }
+.btn-white-outline { background: transparent; border-color: rgba(255,255,255,0.40); color: rgba(255,255,255,0.90); }
+.btn-white-outline:hover { border-color: rgba(255,255,255,0.80); color: #fff; }
+.btn-sm { padding: 9px var(--space-5); font-size: var(--text-sm); }
+.btn-lg { padding: 17px var(--space-10); font-size: var(--text-md); }
+
+.card {
+  background: var(--bg-raised);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--duration-normal) var(--ease-out), background var(--duration-normal) var(--ease-out);
+}
+.card:hover { border-color: var(--border-amber); background: var(--bg-highlight); }
+.card-light { background: #fff; border-color: var(--surface-light-3); box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+.card-light:hover { border-color: var(--amber-600); }
+.card-accent { border-top: 3px solid var(--amber); border-color: var(--border-subtle); border-top-color: var(--amber); }
+.card-border-left { border-left: 3px solid var(--amber); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+
+.callout {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: var(--amber-tint-8);
+  border: 1px solid var(--border-amber);
+  border-radius: var(--radius-md);
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.callout-text { font-size: var(--text-base); line-height: var(--leading-relaxed); font-weight: 600; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   8. MOTION: SCROLL REVEAL
+─────────────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-translate-y));
+  transition:
+    opacity var(--reveal-duration) var(--ease-out),
+    transform var(--reveal-duration) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+.reveal-fade { opacity: 0; transition: opacity var(--reveal-duration) var(--ease-out); transition-delay: var(--reveal-delay, 0ms); }
+.reveal-fade.is-visible { opacity: 1; }
+
+
+/* ─────────────────────────────────────────────────────────────
+   9. RESPONSIVE BASE
+─────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .section { padding-top: var(--section-padding-y-mobile); padding-bottom: var(--section-padding-y-mobile); }
+}
+@media (max-width: 640px) {
+  :root { --section-padding-x: 20px; --section-padding-y-mobile: 60px; --text-md: 17px; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   10. PRINT
+─────────────────────────────────────────────────────────────── */
+@media print {
+  :root { --bg-base: #fff; --text-primary: #000; }
+  .no-print { display: none !important; }
+}
