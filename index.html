@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Social Norms — เรียนรู้วิธีอ่านตลาดจากโครงสร้างราคา ไม่ใช่จาก indicator กับหลิว เทรดเดอร์และ content creator 4+ ปี นักเรียนกว่า 20 คนผ่าน Prop Firm" />
+  <meta property="og:title" content="Social Norms — The Endeavor Trader" />
+  <meta property="og:description" content="อ่านตลาดให้ออก ไม่ใช่แค่ตามสัญญาณ" />
+  <meta property="og:type" content="website" />
+  <title>Social Norms — The Endeavor Trader</title>
+  <link rel="stylesheet" href="design-system.css" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       PAGE-SPECIFIC STYLES
+       Everything that extends the design system for this page.
+    ═══════════════════════════════════════════════════════════ */
+
+    /* ── NAV ─────────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: var(--z-nav);
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      transition:
+        background var(--duration-normal) var(--ease-out),
+        border-color var(--duration-normal) var(--ease-out),
+        backdrop-filter var(--duration-normal) var(--ease-out);
+    }
+    #nav.at-top {
+      background: transparent;
+      border-bottom: 1px solid transparent;
+    }
+    #nav.scrolled {
+      background: rgba(13, 13, 13, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .nav-inner {
+      width: 100%;
+      max-width: var(--max-w-layout);
+      margin: 0 auto;
+      padding: 0 var(--section-padding-x);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-8);
+    }
+    .nav-logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .nav-logo-name {
+      font-size: 16px;
+      font-weight: var(--weight-black);
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .nav-logo-sub {
+      font-size: 9px;
+      font-weight: var(--weight-bold);
+      color: var(--amber);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: var(--space-8);
+      flex: 1;
+      justify-content: center;
+    }
+    .nav-links a {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-secondary);
+      transition: color var(--duration-fast) var(--ease-out);
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block;
+      height: 1.5px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: all var(--duration-normal) var(--ease-out);
+    }
+    .hamburger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      position: fixed;
+      inset: var(--nav-height) 0 0 0;
+      z-index: calc(var(--z-nav) - 1);
+      background: rgba(13, 13, 13, 0.97);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-8) var(--space-6);
+      gap: var(--space-1);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition:
+        opacity var(--duration-normal) var(--ease-out),
+        transform var(--duration-normal) var(--ease-out);
+    }
+    .mobile-menu.is-open {
+      pointer-events: all;
+      opacity: 1;
+      transform: none;
+    }
+    .mobile-menu a {
+      display: block;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-bold);
+      color: var(--text-secondary);
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--border-subtle);
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .mobile-menu a:hover { color: var(--text-primary); }
+    .mobile-menu a.cta-link { color: var(--amber); border-bottom: none; margin-top: var(--space-4); }
+    .mobile-menu a.cta-link:hover { color: var(--amber-300); }
+
+
+    /* ── HERO ─────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      background: var(--bg-void);
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -20%; right: -15%;
+      width: 70vw;
+      height: 70vw;
+      max-width: 900px;
+      max-height: 900px;
+      background: radial-gradient(circle, rgba(212,122,42,0.055) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: var(--max-w-layout);
+      margin: 0 auto;
+      padding: calc(var(--nav-height) + var(--space-24)) var(--section-padding-x) var(--space-24);
+    }
+    .hero-label {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+    }
+    .hero-label-line { width: 28px; height: 1.5px; background: var(--amber); }
+    .hero-label-text {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      color: var(--amber);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+    }
+    .hero-headline {
+      font-size: var(--text-hero);
+      font-weight: var(--weight-black);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+      color: var(--text-primary);
+      margin-bottom: var(--space-6);
+      max-width: 820px;
+    }
+    .hero-headline .accent { color: var(--amber); }
+    .hero-body {
+      font-size: clamp(var(--text-base), 1.6vw, var(--text-md));
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      max-width: 520px;
+      margin-bottom: var(--space-10);
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-16);
+    }
+    .hero-stats {
+      display: flex;
+      gap: var(--space-12);
+      padding-top: var(--space-10);
+      border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+    .hero-stat-num {
+      font-size: var(--text-4xl);
+      font-weight: var(--weight-black);
+      color: var(--amber);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      margin-bottom: var(--space-1);
+    }
+    .hero-stat-label { font-size: var(--text-sm); color: var(--text-muted); font-weight: var(--weight-medium); }
+
+
+    /* ── SIGNAL STRIP ─────────────────────────────────────────── */
+    #signal {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: var(--space-10) 0;
+    }
+    .signal-inner { display: flex; align-items: center; gap: var(--space-6); }
+    .signal-line { flex-shrink: 0; width: 40px; height: 1px; background: var(--amber); }
+    .signal-quote {
+      font-size: clamp(var(--text-base), 1.8vw, var(--text-lg));
+      color: var(--text-secondary);
+      font-weight: var(--weight-regular);
+      font-style: italic;
+      line-height: var(--leading-relaxed);
+    }
+    .signal-quote strong { color: var(--text-primary); font-style: normal; }
+
+
+    /* ── PROBLEMS ─────────────────────────────────────────────── */
+    #problems { background: var(--bg-surface); }
+    .problems-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin-top: var(--space-12);
+    }
+    .problem-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      background: var(--bg-raised);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      transition: border-color var(--duration-normal) var(--ease-out), background var(--duration-normal) var(--ease-out);
+    }
+    .problem-item:hover { border-color: var(--border-amber); background: var(--bg-highlight); }
+    .problem-dot {
+      width: 6px; height: 6px;
+      background: var(--amber);
+      border-radius: var(--radius-full);
+      flex-shrink: 0;
+      margin-top: 10px;
+    }
+    .problem-text { font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+    .problems-resolution {
+      margin-top: var(--space-8);
+      padding: var(--space-6) var(--space-8);
+      border: 1px solid var(--border-amber);
+      border-radius: var(--radius-md);
+      background: var(--amber-tint-8);
+      font-size: clamp(var(--text-base), 1.6vw, var(--text-md));
+      color: var(--amber-300);
+      font-weight: var(--weight-medium);
+      line-height: var(--leading-relaxed);
+      text-align: center;
+    }
+    .problems-resolution strong { color: var(--text-primary); font-weight: var(--weight-black); }
+
+
+    /* ── ABOUT ────────────────────────────────────────────────── */
+    #about { background: var(--bg-base); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: var(--space-16);
+      align-items: start;
+    }
+    .about-portrait-box {
+      aspect-ratio: 3/4;
+      background: var(--bg-raised);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-default);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .about-portrait-placeholder { font-size: 72px; opacity: 0.08; }
+    .about-portrait-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: var(--space-4) var(--space-5);
+      background: linear-gradient(to top, rgba(13,13,13,0.95), transparent);
+    }
+    .about-portrait-name { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-primary); }
+    .about-portrait-role { font-size: var(--text-xs); color: var(--amber); letter-spacing: var(--tracking-caption); text-transform: uppercase; margin-top: 2px; }
+    .about-headline {
+      font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-black);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+      margin-bottom: var(--space-6);
+    }
+    .about-body { font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4); }
+    .about-frameworks { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-8); }
+    .about-framework-tag {
+      padding: var(--space-2) var(--space-4);
+      background: var(--bg-overlay);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      color: var(--text-secondary);
+      transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+    .about-framework-tag:hover { border-color: var(--border-amber); color: var(--amber-300); }
+
+
+    /* ── MENTORSHIP ───────────────────────────────────────────── */
+    #mentorship { background: var(--surface-light); color: var(--text-on-light); }
+    .course-intro { max-width: var(--max-w-text); margin-bottom: var(--space-16); }
+    .course-intro .label { color: var(--amber-700); }
+    .mentorship-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: var(--space-12);
+      align-items: start;
+    }
+    .curriculum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-6); }
+    .curriculum-block {
+      padding: var(--space-5) var(--space-6);
+      background: var(--surface-light-2);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--surface-light-3);
+    }
+    .curriculum-block-title {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      color: var(--amber-700);
+      letter-spacing: var(--tracking-label);
+      text-transform: uppercase;
+      margin-bottom: var(--space-3);
+    }
+    .curriculum-list { display: flex; flex-direction: column; gap: var(--space-1); }
+    .curriculum-list li {
+      font-size: var(--text-sm);
+      color: var(--text-on-light-2);
+      line-height: var(--leading-normal);
+      padding-left: var(--space-4);
+      position: relative;
+    }
+    .curriculum-list li::before { content: '·'; position: absolute; left: var(--space-1); color: var(--amber-600); }
+    .format-list { display: flex; flex-direction: column; gap: var(--space-5); margin-top: var(--space-6); }
+    .format-item { display: flex; gap: var(--space-4); align-items: flex-start; }
+    .format-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .format-label { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-on-light); margin-bottom: 2px; }
+    .format-desc { font-size: var(--text-sm); color: var(--text-on-light-3); line-height: var(--leading-normal); }
+    .pricing-card {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--surface-light-3);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      overflow: hidden;
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-6));
+    }
+    .pricing-header { padding: var(--space-6) var(--space-8); border-bottom: 1px solid var(--surface-light-3); }
+    .pricing-title { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-on-light-2); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+    .pricing-body { padding: var(--space-6) var(--space-8); }
+    .pricing-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--surface-light-3);
+    }
+    .pricing-option:last-of-type { border-bottom: none; }
+    .pricing-option-name { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-on-light); }
+    .pricing-option-note { font-size: var(--text-xs); color: var(--text-on-light-3); margin-top: 2px; }
+    .pricing-option-price {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-black);
+      color: var(--amber-600);
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .pricing-option-unit { font-size: var(--text-xs); font-weight: var(--weight-regular); color: var(--text-on-light-3); }
+    .pricing-footer { padding: var(--space-6) var(--space-8); background: var(--surface-light-2); border-top: 1px solid var(--surface-light-3); }
+    .pricing-note { font-size: var(--text-xs); color: var(--text-on-light-3); text-align: center; margin-top: var(--space-3); line-height: var(--leading-relaxed); }
+
+
+    /* ── ADVANCED ─────────────────────────────────────────────── */
+    #advanced { background: var(--bg-void); }
+    .advanced-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-default);
+      border-top: 3px solid var(--amber);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .advanced-card-header { padding: var(--space-12) var(--space-12) var(--space-8); border-bottom: 1px solid var(--border-subtle); }
+    .advanced-tags { display: flex; gap: var(--space-3); margin-bottom: var(--space-6); flex-wrap: wrap; }
+    .advanced-headline {
+      font-size: clamp(var(--text-2xl), 3.5vw, var(--text-4xl));
+      font-weight: var(--weight-black);
+      letter-spacing: var(--tracking-display);
+      line-height: var(--leading-tight);
+      margin-bottom: var(--space-4);
+    }
+    .advanced-subtext { font-size: var(--text-base); color: var(--text-secondary); max-width: 600px; line-height: var(--leading-relaxed); }
+    .advanced-card-body { display: grid; grid-template-columns: 1fr 320px; gap: 0; }
+    .advanced-curriculum { padding: var(--space-10) var(--space-12); border-right: 1px solid var(--border-subtle); }
+    .advanced-curriculum-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-6); }
+    .advanced-format-list { display: flex; flex-direction: column; gap: var(--space-4); margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--border-subtle); }
+    .advanced-pricing { padding: var(--space-10) var(--space-8); display: flex; flex-direction: column; }
+    .advanced-price-display { text-align: center; margin-bottom: var(--space-8); }
+    .advanced-price-num { font-size: 52px; font-weight: var(--weight-black); color: var(--amber); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+    .advanced-price-unit { font-size: var(--text-sm); color: var(--text-muted); margin-top: var(--space-2); }
+    .advanced-includes { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-8); flex: 1; }
+    .advanced-include { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); }
+    .advanced-include-check { color: var(--amber); font-weight: var(--weight-black); font-size: var(--text-base); flex-shrink: 0; }
+
+
+    /* ── TESTIMONIALS ────────────────────────────────────────── */
+    #proof { background: var(--bg-surface); }
+    .proof-header { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--space-8); margin-bottom: var(--space-12); flex-wrap: wrap; }
+    .proof-stat { text-align: right; flex-shrink: 0; }
+    .proof-stat-num { font-size: var(--text-4xl); font-weight: var(--weight-black); color: var(--amber); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+    .proof-stat-label { font-size: var(--text-sm); color: var(--text-muted); margin-top: var(--space-1); }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+    .testimonial {
+      background: var(--bg-raised);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      transition: border-color var(--duration-normal) var(--ease-out);
+    }
+    .testimonial:hover { border-color: var(--border-amber); }
+    .testimonial-mark { font-size: 28px; color: var(--amber); font-weight: var(--weight-black); line-height: 1; }
+    .testimonial-text { font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); flex: 1; }
+    .testimonial-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+    .testimonial-author-name { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-primary); }
+    .testimonial-author-tag { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
+
+
+    /* ── WHY ──────────────────────────────────────────────────── */
+    #why { background: var(--bg-base); }
+    .why-statement {
+      max-width: var(--max-w-text);
+      font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+      font-weight: var(--weight-regular);
+      color: var(--text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-16);
+    }
+    .why-statement strong { color: var(--text-primary); font-weight: var(--weight-bold); }
+    .why-pillars { display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-4); }
+    .why-pillar {
+      padding: var(--space-6) var(--space-5);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      transition: border-color var(--duration-normal) var(--ease-out), background var(--duration-normal) var(--ease-out);
+    }
+    .why-pillar:hover { border-color: var(--border-amber); background: var(--amber-tint-8); }
+    .why-pillar-icon { font-size: 22px; margin-bottom: var(--space-4); }
+    .why-pillar-title { font-size: var(--text-sm); font-weight: var(--weight-bold); color: var(--text-primary); margin-bottom: var(--space-2); }
+    .why-pillar-desc { font-size: var(--text-sm); color: var(--text-muted); line-height: var(--leading-relaxed); }
+
+
+    /* ── FAQ ──────────────────────────────────────────────────── */
+    #faq { background: var(--surface-light); color: var(--text-on-light); }
+    .faq-body { max-width: 720px; margin-top: var(--space-12); }
+    .faq-item { border-bottom: 1px solid var(--surface-light-3); }
+    .faq-item:first-child { border-top: 1px solid var(--surface-light-3); }
+    .faq-trigger {
+      width: 100%;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-6);
+      padding: var(--space-5) 0;
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      color: var(--text-on-light);
+      cursor: pointer;
+      background: none;
+      transition: color var(--duration-fast) var(--ease-out);
+    }
+    .faq-trigger:hover { color: var(--amber-700); }
+    .faq-trigger.is-open { color: var(--amber-700); }
+    .faq-icon {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: var(--radius-full);
+      background: var(--surface-light-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--text-on-light-2);
+      transition: transform var(--duration-normal) var(--ease-out), background var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out);
+    }
+    .faq-trigger.is-open .faq-icon { transform: rotate(180deg); background: var(--amber-600); color: #fff; }
+    .faq-panel { max-height: 0; overflow: hidden; transition: max-height var(--duration-slow) var(--ease-out); }
+    .faq-panel-inner { padding-bottom: var(--space-5); font-size: var(--text-base); color: var(--text-on-light-2); line-height: var(--leading-relaxed); }
+
+
+    /* ── FINAL CTA ────────────────────────────────────────────── */
+    #cta { background: var(--amber); position: relative; overflow: hidden; }
+    #cta::before {
+      content: '';
+      position: absolute;
+      top: -50%; right: -20%;
+      width: 60vw; height: 60vw;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; text-align: center; max-width: 600px; margin: 0 auto; }
+    .cta-label { font-size: var(--text-xs); font-weight: var(--weight-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; color: rgba(255,255,255,0.65); margin-bottom: var(--space-4); }
+    .cta-headline { font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); font-weight: var(--weight-black); letter-spacing: var(--tracking-display); line-height: var(--leading-tight); color: #fff; margin-bottom: var(--space-4); }
+    .cta-body { font-size: var(--text-base); color: rgba(255,255,255,0.80); line-height: var(--leading-relaxed); margin-bottom: var(--space-10); }
+    .cta-actions { display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+
+
+    /* ── FOOTER ───────────────────────────────────────────────── */
+    footer { background: var(--bg-void); border-top: 1px solid var(--border-subtle); padding: var(--space-16) 0 var(--space-8); }
+    .footer-top { display: grid; grid-template-columns: 260px 1fr 1fr; gap: var(--space-12); padding-bottom: var(--space-12); border-bottom: 1px solid var(--border-subtle); margin-bottom: var(--space-8); }
+    .footer-brand-name { font-size: var(--text-lg); font-weight: var(--weight-black); letter-spacing: -0.01em; margin-bottom: var(--space-1); }
+    .footer-brand-tagline { font-size: var(--text-xs); color: var(--amber); letter-spacing: var(--tracking-label); text-transform: uppercase; margin-bottom: var(--space-3); }
+    .footer-brand-values { font-size: var(--text-xs); color: var(--text-muted); letter-spacing: var(--tracking-caption); }
+    .footer-social { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+    .footer-social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--bg-raised);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      color: var(--text-muted);
+      transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+    .footer-social-link:hover { border-color: var(--border-medium); color: var(--text-secondary); }
+    .footer-col-title { font-size: var(--text-xs); font-weight: var(--weight-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--text-muted); margin-bottom: var(--space-5); }
+    .footer-links { display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer-links a { font-size: var(--text-sm); color: var(--text-muted); transition: color var(--duration-fast) var(--ease-out); }
+    .footer-links a:hover { color: var(--text-secondary); }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+    .footer-bottom p { font-size: var(--text-xs); color: var(--text-muted); }
+
+
+    /* ── RESPONSIVE ───────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .why-pillars { grid-template-columns: repeat(3, 1fr); }
+      .advanced-curriculum-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 900px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-portrait { display: none; }
+      .mentorship-layout { grid-template-columns: 1fr; }
+      .curriculum-grid { grid-template-columns: 1fr; }
+      .pricing-card { position: static; }
+      .advanced-card-body { grid-template-columns: 1fr; }
+      .advanced-curriculum { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+      .advanced-card-header { padding: var(--space-8); }
+      .advanced-curriculum { padding: var(--space-8); }
+      .advanced-pricing { padding: var(--space-8); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .why-pillars { grid-template-columns: 1fr 1fr; }
+      .proof-header { flex-direction: column; align-items: flex-start; }
+      .proof-stat { text-align: left; }
+      .footer-top { grid-template-columns: 1fr; gap: var(--space-8); }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 640px) {
+      .problems-grid { grid-template-columns: 1fr; }
+      .why-pillars { grid-template-columns: 1fr; }
+      .hero-stats { gap: var(--space-8); }
+      .cta-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════ NAV ══════════════ -->
+  <nav id="nav" class="at-top">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="Social Norms — หน้าแรก">
+        <span class="nav-logo-name">Social Norms</span>
+        <span class="nav-logo-sub">The Endeavor Trader</span>
+      </a>
+      <div class="nav-links">
+        <a href="#mentorship">Mentorship</a>
+        <a href="#advanced">Advanced</a>
+        <a href="#about">เกี่ยวกับ</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a href="#mentorship" class="btn btn-primary btn-sm nav-cta">สมัครเรียน</a>
+      <button class="hamburger" id="hamburger" aria-label="เปิด/ปิดเมนู" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobile-menu" role="navigation">
+    <a href="#mentorship" onclick="closeMobileMenu()">Norms Mentorship</a>
+    <a href="#advanced" onclick="closeMobileMenu()">Norms Advanced</a>
+    <a href="#about" onclick="closeMobileMenu()">เกี่ยวกับ Social Norms</a>
+    <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+    <a href="#cta" onclick="closeMobileMenu()" class="cta-link">สมัครเรียน →</a>
+  </div>
+
+
+  <!-- ══════════════ HERO ══════════════ -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-label reveal">
+        <div class="hero-label-line"></div>
+        <span class="hero-label-text">humble · conscious · endeavor</span>
+      </div>
+      <h1 class="hero-headline">
+        <span class="reveal" style="--reveal-delay:80ms;">อ่านตลาดให้ออก</span><br/>
+        <span class="reveal" style="--reveal-delay:160ms;">ไม่ใช่แค่<span class="accent">ตามสัญญาณ</span></span>
+      </h1>
+      <p class="hero-body reveal" style="--reveal-delay:240ms;">
+        ถ้าคุณดูกราฟแล้วยังไม่รู้ว่าตลาดกำลังทำอะไรอยู่
+        ถ้าเคยลอง indicator หลายตัวแต่ยังไม่ได้คำตอบ —
+        ผมอยากให้คุณเข้าใจตลาดจริงๆ ไม่ใช่แค่เทรดตามคนอื่น
+      </p>
+      <div class="hero-actions reveal" style="--reveal-delay:320ms;">
+        <a href="#mentorship" class="btn btn-primary btn-lg">ดู Norms Mentorship</a>
+        <a href="#advanced" class="btn btn-ghost btn-lg">ดู Advanced Course</a>
+      </div>
+      <div class="hero-stats reveal" style="--reveal-delay:400ms;">
+        <div class="hero-stat">
+          <div class="hero-stat-num">4+</div>
+          <div class="hero-stat-label">ปีในตลาด</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">20+</div>
+          <div class="hero-stat-label">นักเรียนผ่าน Prop Firm</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">2</div>
+          <div class="hero-stat-label">หลักสูตร</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ SIGNAL STRIP ══════════════ -->
+  <div id="signal">
+    <div class="container">
+      <div class="signal-inner">
+        <div class="signal-line"></div>
+        <p class="signal-quote">
+          ผมไม่ได้สอนให้เทรดตามคนอื่น —
+          <strong>ผมสอนให้อ่านตลาดออกด้วยตัวเอง</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ PROBLEMS ══════════════ -->
+  <section id="problems" class="section">
+    <div class="container">
+      <span class="label reveal">ปัญหาที่คุณอาจกำลังเจออยู่</span>
+      <h2 class="type-section reveal" style="--reveal-delay:80ms;">คุณเคยรู้สึกแบบนี้ไหม?</h2>
+      <div class="problems-grid">
+        <div class="problem-item reveal" style="--reveal-delay:80ms;">
+          <div class="problem-dot"></div>
+          <p class="problem-text">เปิดกราฟมาแล้วไม่รู้จะมองอะไรก่อน indicator เต็มจอแต่ยังตัดสินใจไม่ได้</p>
+        </div>
+        <div class="problem-item reveal" style="--reveal-delay:160ms;">
+          <div class="problem-dot"></div>
+          <p class="problem-text">เห็นโซนเดียวกันแต่ไม่รู้ว่า entry ตรงไหนถึงจะคุ้ม risk:reward แย่มาตลอด</p>
+        </div>
+        <div class="problem-item reveal" style="--reveal-delay:240ms;">
+          <div class="problem-dot"></div>
+          <p class="problem-text">เทรดตาม signal หรือ copy trade แต่ยังขาดทุนอยู่ดี เพราะไม่เข้าใจว่าทำไม</p>
+        </div>
+        <div class="problem-item reveal" style="--reveal-delay:320ms;">
+          <div class="problem-dot"></div>
+          <p class="problem-text">อยากมีระบบที่เป็นของตัวเอง มีเหตุมีผล บอกได้ว่าทำไมถึงเข้าทุก trade</p>
+        </div>
+      </div>
+      <div class="problems-resolution reveal">
+        ถ้าใช่ — คุณไม่ได้ขาดทักษะ<br/>
+        <strong>คุณแค่ยังไม่มีฐานความคิดที่ถูก</strong>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ ABOUT ══════════════ -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-portrait reveal">
+          <div class="about-portrait-box">
+            <div class="about-portrait-placeholder">⚔️</div>
+            <div class="about-portrait-caption">
+              <div class="about-portrait-name">หลิว</div>
+              <div class="about-portrait-role">Social Norms</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-content">
+          <span class="label reveal">Social Norms คือใคร</span>
+          <h2 class="about-headline reveal" style="--reveal-delay:80ms;">
+            ผมชื่อหลิว<br/>
+            <span class="text-amber">เทรดเดอร์</span>
+          </h2>
+          <p class="about-body reveal" style="--reveal-delay:160ms;">
+            และ content creator ด้านการวิเคราะห์ตลาดมากกว่า 4 ปี
+            Social Norms เริ่มต้นจากความอยากสอนให้คนอ่านตลาดได้ด้วยตัวเอง
+            ไม่ใช่ท่องจำรูปแบบ ไม่ใช่ copy signal —
+            แต่เข้าใจว่าตลาดกำลังทำอะไรและทำไม
+          </p>
+          <p class="about-body reveal" style="--reveal-delay:200ms;">
+            ตลอด 4 ปีที่ผ่านมา ผมพัฒนาระบบที่ผสาน Dow Theory, SMC,
+            Wyckoff และ Psychology เข้าด้วยกันเป็น framework ที่ใช้ได้จริง
+            และนั่นคือสิ่งที่ผมอยากถ่ายทอดให้คุณ
+          </p>
+          <div class="about-frameworks reveal" style="--reveal-delay:280ms;">
+            <span class="about-framework-tag">Dow Theory</span>
+            <span class="about-framework-tag">Smart Money Concept</span>
+            <span class="about-framework-tag">Wyckoff</span>
+            <span class="about-framework-tag">Elliott Wave</span>
+            <span class="about-framework-tag">ICT</span>
+            <span class="about-framework-tag">NMSPC Concept</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ MENTORSHIP ══════════════ -->
+  <section id="mentorship" class="section">
+    <div class="container">
+      <div class="course-intro">
+        <span class="label reveal">หลักสูตรที่ 1</span>
+        <h2 class="type-section reveal" style="--reveal-delay:80ms;">Norms Mentorship</h2>
+        <p class="type-body reveal" style="--reveal-delay:160ms; color:var(--text-on-light-2); margin-top:var(--space-3);">
+          เรียนรู้วิธีอ่านตลาดจากโครงสร้างราคา ไม่ใช่จาก indicator
+        </p>
+      </div>
+      <div class="mentorship-layout">
+        <div>
+          <h3 class="type-title reveal" style="color:var(--text-on-light);">สิ่งที่คุณจะได้เรียน</h3>
+          <div class="curriculum-grid">
+            <div class="curriculum-block reveal" style="--reveal-delay:80ms;">
+              <div class="curriculum-block-title">📐 Theory</div>
+              <ul class="curriculum-list">
+                <li>Dow Theory, Logic & Method</li>
+                <li>NMSPC Concept</li>
+              </ul>
+            </div>
+            <div class="curriculum-block reveal" style="--reveal-delay:120ms;">
+              <div class="curriculum-block-title">📊 Technical</div>
+              <ul class="curriculum-list">
+                <li>Support & Resistance</li>
+                <li>Fibonacci</li>
+                <li>RSI Divergence</li>
+                <li>Liquidity Basic</li>
+              </ul>
+            </div>
+            <div class="curriculum-block reveal" style="--reveal-delay:160ms;">
+              <div class="curriculum-block-title">⚙️ System</div>
+              <ul class="curriculum-list">
+                <li>Trading Zone</li>
+                <li>Basic Trading Setup</li>
+                <li>Entry / TP / SL</li>
+                <li>Basic SMC</li>
+              </ul>
+            </div>
+            <div class="curriculum-block reveal" style="--reveal-delay:200ms;">
+              <div class="curriculum-block-title">🧠 Mindset</div>
+              <ul class="curriculum-list">
+                <li>Money Management</li>
+                <li>Backtesting</li>
+                <li>Narrative — อธิบายตลาดได้เอง</li>
+              </ul>
+            </div>
+          </div>
+          <h3 class="type-title reveal" style="color:var(--text-on-light); margin-top:var(--space-10);">รูปแบบการเรียน</h3>
+          <div class="format-list">
+            <div class="format-item reveal" style="--reveal-delay:80ms;">
+              <div class="format-icon">📅</div>
+              <div>
+                <div class="format-label">สอนสดทุกวันจันทร์</div>
+                <div class="format-desc">20:00–22:00 น. ออนไลน์ผ่าน Discord</div>
+              </div>
+            </div>
+            <div class="format-item reveal" style="--reveal-delay:120ms;">
+              <div class="format-icon">🎬</div>
+              <div>
+                <div class="format-label">วิดีโอย้อนหลัง</div>
+                <div class="format-desc">ดูซ้ำได้ตลอดระยะเวลาที่เป็นสมาชิก</div>
+              </div>
+            </div>
+            <div class="format-item reveal" style="--reveal-delay:160ms;">
+              <div class="format-icon">💬</div>
+              <div>
+                <div class="format-label">ห้อง Q&amp;A</div>
+                <div class="format-desc">ถามได้ตลอดระยะเวลาเรียน</div>
+              </div>
+            </div>
+            <div class="format-item reveal" style="--reveal-delay:200ms;">
+              <div class="format-icon">📈</div>
+              <div>
+                <div class="format-label">วิเคราะห์ตลาดสด 1–2 ครั้ง/สัปดาห์</div>
+                <div class="format-desc">ดูผมทำจริง อธิบายจริง</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal" style="--reveal-delay:160ms;">
+          <div class="pricing-card">
+            <div class="pricing-header">
+              <div class="pricing-title">ราคา</div>
+            </div>
+            <div class="pricing-body">
+              <div class="pricing-option">
+                <div>
+                  <div class="pricing-option-name">💛 รายเดือน</div>
+                  <div class="pricing-option-note">ยกเลิกได้ทุกเมื่อ</div>
+                </div>
+                <div class="text-right">
+                  <div class="pricing-option-price">1,000 <span class="pricing-option-unit">฿/เดือน</span></div>
+                </div>
+              </div>
+              <div class="pricing-option">
+                <div>
+                  <div class="pricing-option-name">🏆 รายปี</div>
+                  <div class="pricing-option-note">ประหยัด 2,000 บาท</div>
+                </div>
+                <div class="text-right">
+                  <div class="pricing-option-price">10,000 <span class="pricing-option-unit">฿/ปี</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="pricing-footer">
+              <a href="https://www.facebook.com/socialnormss" target="_blank" rel="noopener"
+                 class="btn btn-primary" style="width:100%; justify-content:center;">
+                สมัคร Mentorship →
+              </a>
+              <p class="pricing-note">
+                ระยะเวลา: 15 ม.ค. — 31 ธ.ค. 2026<br/>
+                มีคำถาม? DM มาหาหลิวได้เลย
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ ADVANCED ══════════════ -->
+  <section id="advanced" class="section">
+    <div class="container">
+      <span class="label reveal">หลักสูตรที่ 2 — The Flagship</span>
+      <div class="advanced-card reveal" style="--reveal-delay:80ms;">
+        <div class="advanced-card-header">
+          <div class="advanced-tags">
+            <span class="tag tag-amber">90 วัน</span>
+            <span class="tag tag-outline">Wyckoff เต็มระบบ</span>
+            <span class="tag tag-subtle">Prop Firm Support</span>
+          </div>
+          <h2 class="advanced-headline">
+            Norms <span class="text-amber">Advanced</span>
+          </h2>
+          <p class="advanced-subtext">
+            เรียนรู้ Wyckoff อย่างลึก สร้าง setup ของตัวเอง และออกไปเทรดได้จริง
+            *(รวมทุกอย่างใน Norms Mentorship และต่อยอดด้วย)*
+          </p>
+        </div>
+        <div class="advanced-card-body">
+          <div class="advanced-curriculum">
+            <h3 class="type-title" style="margin-bottom:var(--space-2);">สิ่งที่คุณจะได้เรียน</h3>
+            <p style="font-size:var(--text-sm); color:var(--text-muted); margin-bottom:var(--space-4);">*(ต่อยอดจาก Mentorship ทั้งหมด)*</p>
+            <div class="advanced-curriculum-grid">
+              <div class="curriculum-block">
+                <div class="curriculum-block-title">📐 Theory</div>
+                <ul class="curriculum-list" style="color:var(--text-secondary);">
+                  <li>Norm Theory</li>
+                  <li>Wyckoff Logic & Master</li>
+                  <li>Elliott Wave for Wyckoff</li>
+                </ul>
+              </div>
+              <div class="curriculum-block">
+                <div class="curriculum-block-title">📊 Technical</div>
+                <ul class="curriculum-list" style="color:var(--text-secondary);">
+                  <li>Wyckoff Schematic Basic & Advanced</li>
+                  <li>Fibonacci Advanced + Wyckoff Fib</li>
+                  <li>Volume & Complex Liquidity</li>
+                  <li>Correlation of Time & Price</li>
+                </ul>
+              </div>
+              <div class="curriculum-block">
+                <div class="curriculum-block-title">⚙️ Norms System</div>
+                <ul class="curriculum-list" style="color:var(--text-secondary);">
+                  <li>Norms Setup Model #1 & #2</li>
+                  <li>Wyckoff Classic / Advanced Zone</li>
+                  <li>Wyckoff Re-Phase & Cycle</li>
+                </ul>
+              </div>
+              <div class="curriculum-block">
+                <div class="curriculum-block-title">🔧 Hard Skill</div>
+                <ul class="curriculum-list" style="color:var(--text-secondary);">
+                  <li>Prop Firm Trading</li>
+                  <li>Read The Retail Market</li>
+                  <li>Create Your Own Trading Setup</li>
+                </ul>
+              </div>
+            </div>
+            <div class="advanced-format-list">
+              <div class="format-item">
+                <div class="format-icon">📅</div>
+                <div>
+                  <div class="format-label" style="color:var(--text-primary);">สอนสด วันพุธ + พฤหัสบดี</div>
+                  <div class="format-desc">ครั้งละ 2 ชั่วโมง</div>
+                </div>
+              </div>
+              <div class="format-item">
+                <div class="format-icon">📈</div>
+                <div>
+                  <div class="format-label" style="color:var(--text-primary);">วิเคราะห์ตลาด จ. / อ. / ศ.</div>
+                  <div class="format-desc">real-time walkthrough ทุกสัปดาห์</div>
+                </div>
+              </div>
+              <div class="format-item">
+                <div class="format-icon">🎬</div>
+                <div>
+                  <div class="format-label" style="color:var(--text-primary);">วิดีโอย้อนหลัง ตลอดชีพ</div>
+                  <div class="format-desc">ดูซ้ำได้ไม่มีวันหมดอายุ</div>
+                </div>
+              </div>
+              <div class="format-item">
+                <div class="format-icon">🏆</div>
+                <div>
+                  <div class="format-label" style="color:var(--text-primary);">Prop Firm Support ครบ</div>
+                  <div class="format-desc">มี support ตลอดการเดินทาง</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="advanced-pricing">
+            <div class="advanced-price-display">
+              <div class="advanced-price-num">50,000</div>
+              <div class="advanced-price-unit">บาท / 90 วัน</div>
+            </div>
+            <div class="advanced-includes">
+              <div class="advanced-include"><span class="advanced-include-check">✓</span>เรียนสด 5 วัน/สัปดาห์</div>
+              <div class="advanced-include"><span class="advanced-include-check">✓</span>วิดีโอตลอดชีพ</div>
+              <div class="advanced-include"><span class="advanced-include-check">✓</span>นัดทบทวนได้ตลอด</div>
+              <div class="advanced-include"><span class="advanced-include-check">✓</span>Prop Firm support ครบ</div>
+              <div class="advanced-include"><span class="advanced-include-check">✓</span>ห้อง Q&amp;A ตลอด 90 วัน</div>
+            </div>
+            <a href="https://www.facebook.com/socialnormss" target="_blank" rel="noopener"
+               class="btn btn-primary btn-lg" style="width:100%; justify-content:center;">
+              สมัคร Advanced →
+            </a>
+            <p style="font-size:var(--text-xs); color:var(--text-muted); text-align:center; margin-top:var(--space-3); line-height:var(--leading-relaxed);">
+              มีคำถามก่อน? DM มาหาหลิวได้เลย<br/>ตอบทุก message ครับ
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ PROOF ══════════════ -->
+  <section id="proof" class="section">
+    <div class="container">
+      <div class="proof-header">
+        <div>
+          <span class="label reveal">เสียงจากนักเรียน</span>
+          <h2 class="type-section reveal" style="--reveal-delay:80ms;">พวกเขาบอกอะไร?</h2>
+        </div>
+        <div class="proof-stat reveal">
+          <div class="proof-stat-num">20+</div>
+          <div class="proof-stat-label">นักเรียนผ่าน<br/>Prop Firm Challenge</div>
+        </div>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial reveal">
+          <div class="testimonial-mark">"</div>
+          <p class="testimonial-text">ก่อนเรียนเปิดกราฟมาแล้วไม่รู้จะมองอะไร พอได้เรียนกับหลิวแค่ไม่กี่สัปดาห์ เริ่มอ่าน market structure ออก และวาง entry ได้มีเหตุผลขึ้นมากครับ</p>
+          <div class="testimonial-footer">
+            <div>
+              <div class="testimonial-author-name">นักเรียน</div>
+              <div class="testimonial-author-tag">Norms Mentorship</div>
+            </div>
+            <span class="tag tag-success">ผ่าน Prop Firm ✓</span>
+          </div>
+        </div>
+        <div class="testimonial reveal" style="--reveal-delay:80ms;">
+          <div class="testimonial-mark">"</div>
+          <p class="testimonial-text">ไม่เคยคิดว่า Wyckoff จะเข้าใจได้ขนาดนี้ หลิวอธิบายเชื่อมกับ SMC ที่เราเคยรู้แล้ว ทำให้เห็นภาพตลาดชัดขึ้นมาก และผ่าน Prop Firm challenge ได้หลังจบ course ด้วยครับ</p>
+          <div class="testimonial-footer">
+            <div>
+              <div class="testimonial-author-name">นักเรียน</div>
+              <div class="testimonial-author-tag">Norms Advanced</div>
+            </div>
+            <span class="tag tag-success">ผ่าน Prop Firm ✓</span>
+          </div>
+        </div>
+        <div class="testimonial reveal" style="--reveal-delay:160ms;">
+          <div class="testimonial-mark">"</div>
+          <p class="testimonial-text">สิ่งที่ดีที่สุดคือระบบที่ได้มาเป็นของตัวเอง ไม่ใช่แค่ท่องจำ แต่เข้าใจว่าทำไมถึงเข้า trade นี้ และทำไมถึงไม่เข้า ซึ่งเป็นสิ่งที่หาจากที่อื่นไม่ได้</p>
+          <div class="testimonial-footer">
+            <div>
+              <div class="testimonial-author-name">นักเรียน</div>
+              <div class="testimonial-author-tag">Norms Advanced</div>
+            </div>
+            <span class="tag tag-subtle">สร้าง System ของตัวเอง</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ WHY ══════════════ -->
+  <section id="why" class="section">
+    <div class="container">
+      <span class="label reveal">ทำไมต้อง Social Norms</span>
+      <p class="why-statement reveal" style="--reveal-delay:80ms; margin-top:var(--space-4);">
+        Trading education มีอยู่สองขั้วเสมอ — <strong>flashy และ empty</strong> หรือ <strong>dry และไม่มีชีวิต</strong>
+        Social Norms ไม่ได้อยู่ขั้วไหน <strong>เราสอนให้อ่านตลาดออก</strong> เพราะมันคือสิ่งเดียวที่ทำให้เทรดได้จริงในระยะยาว
+      </p>
+      <div class="why-pillars">
+        <div class="why-pillar reveal"><div class="why-pillar-icon">🚫</div><div class="why-pillar-title">ไม่สอนให้รวยเร็ว</div><div class="why-pillar-desc">สอนให้อ่านตลาดได้จริง ระยะยาว</div></div>
+        <div class="why-pillar reveal" style="--reveal-delay:80ms;"><div class="why-pillar-icon">📡</div><div class="why-pillar-title">ไม่ขาย signal</div><div class="why-pillar-desc">สอนให้หา signal เองได้ด้วยตัวเอง</div></div>
+        <div class="why-pillar reveal" style="--reveal-delay:160ms;"><div class="why-pillar-icon">⚔️</div><div class="why-pillar-title">ระบบที่ใช้จริง</div><div class="why-pillar-desc">ทุกอย่างที่สอนคือสิ่งที่ผมใช้เองในการเทรด</div></div>
+        <div class="why-pillar reveal" style="--reveal-delay:240ms;"><div class="why-pillar-icon">👥</div><div class="why-pillar-title">เรียนกับ community</div><div class="why-pillar-desc">ไม่ได้เรียนคนเดียว มีคนเดินไปด้วยกัน</div></div>
+        <div class="why-pillar reveal" style="--reveal-delay:320ms;"><div class="why-pillar-icon">🗓️</div><div class="why-pillar-title">เริ่มเมื่อไรก็ได้</div><div class="why-pillar-desc">สมัครรายเดือนลองดูก่อน หรือรายปีถ้าพร้อม</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ FAQ ══════════════ -->
+  <section id="faq" class="section">
+    <div class="container">
+      <span class="label reveal">FAQ</span>
+      <h2 class="type-section reveal" style="--reveal-delay:80ms;">คำถามที่พบบ่อย</h2>
+      <div class="faq-body reveal" style="--reveal-delay:160ms;">
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFAQ(this)">ต้องมีพื้นฐานก่อนไหม?<span class="faq-icon">▾</span></button>
+          <div class="faq-panel"><div class="faq-panel-inner">ไม่จำเป็น Norms Mentorship ออกแบบมาสำหรับคนที่เริ่มต้นจากศูนย์ได้เลย</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFAQ(this)">Mentorship กับ Advanced ต่างกันยังไง?<span class="faq-icon">▾</span></button>
+          <div class="faq-panel"><div class="faq-panel-inner">Mentorship เน้น SMC + Dow Theory เรียนรายเดือนหรือรายปี วิดีโอย้อนหลังดูได้ตลอดช่วงที่เป็นสมาชิก — Advanced เรียน 90 วันเข้มข้น ครอบคลุม Wyckoff เต็มระบบ วิดีโอตลอดชีพ มี Prop Firm support และนัดทบทวนได้ ไม่จำเป็นต้องผ่าน Mentorship ก่อน</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFAQ(this)">รายเดือนกับรายปีต่างกันยังไง?<span class="faq-icon">▾</span></button>
+          <div class="faq-panel"><div class="faq-panel-inner">เนื้อหาและสิทธิ์เข้าถึงเหมือนกันทุกอย่าง รายปีประหยัดกว่า 2,000 บาท เหมาะถ้าตั้งใจเรียนจริงจังตลอดปี</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFAQ(this)">ถ้าเลิกรายเดือนกลางคันยังดูวิดีโอย้อนหลังได้ไหม?<span class="faq-icon">▾</span></button>
+          <div class="faq-panel"><div class="faq-panel-inner">วิดีโอย้อนหลังและ community access ใช้ได้ตลอดระยะเวลาที่ยังเป็นสมาชิกอยู่เท่านั้น</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFAQ(this)">ถ้าติดธุระวันจันทร์ทำได้ไหม?<span class="faq-icon">▾</span></button>
+          <div class="faq-panel"><div class="faq-panel-inner">ได้เลย มีวิดีโอย้อนหลังดูได้ทุกครั้ง ไม่มีการ miss content</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-trigger" onclick="toggleFAQ(this)">เรียนแล้วได้อะไร?<span class="faq-icon">▾</span></button>
+          <div class="faq-panel"><div class="faq-panel-inner">ได้ระบบที่เป็นของตัวเอง — อ่าน market structure ได้, หา zone ได้, วาง entry ได้ และอธิบายให้คนอื่นฟังได้ว่าทำไมถึงเข้า trade นี้</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ CTA ══════════════ -->
+  <section id="cta" class="section">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-label reveal">สนใจเรียน?</div>
+        <h2 class="cta-headline reveal" style="--reveal-delay:80ms;">มาคุยกันได้เลย</h2>
+        <p class="cta-body reveal" style="--reveal-delay:160ms;">
+          DM มาหาหลิวทาง Facebook ได้เลยครับ<br/>ผมตอบทุก message
+        </p>
+        <div class="cta-actions reveal" style="--reveal-delay:240ms;">
+          <a href="https://www.facebook.com/socialnormss" target="_blank" rel="noopener" class="btn btn-white btn-lg">📘 DM ทาง Facebook</a>
+          <a href="https://www.youtube.com/@socialnorms.trader" target="_blank" rel="noopener" class="btn btn-white-outline btn-lg">▶ YouTube Channel</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-brand-name">Social Norms</div>
+          <div class="footer-brand-tagline">The Endeavor Trader</div>
+          <div class="footer-brand-values">humble · conscious · endeavor</div>
+          <div class="footer-social">
+            <a href="https://www.facebook.com/socialnormss" target="_blank" rel="noopener" class="footer-social-link">📘 Facebook</a>
+            <a href="https://www.youtube.com/@socialnorms.trader" target="_blank" rel="noopener" class="footer-social-link">▶ YouTube</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">หลักสูตร</div>
+          <div class="footer-links">
+            <a href="#mentorship">Norms Mentorship</a>
+            <a href="#advanced">Norms Advanced</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">เกี่ยวกับ</div>
+          <div class="footer-links">
+            <a href="#about">Social Norms คือใคร</a>
+            <a href="#faq">FAQ</a>
+            <a href="#cta">สมัครเรียน</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Social Norms. All rights reserved.</p>
+        <p>เนื้อหานี้ใช้เพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำการลงทุน</p>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════ SCRIPTS ══════════════ -->
+  <script>
+    // ── Nav scroll behavior
+    const nav = document.getElementById('nav');
+    const updateNav = () => {
+      if (window.scrollY > 24) {
+        nav.classList.remove('at-top');
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+        nav.classList.add('at-top');
+      }
+    };
+    window.addEventListener('scroll', updateNav, { passive: true });
+    updateNav();
+
+    // ── Mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    let menuOpen = false;
+
+    hamburger.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      hamburger.classList.toggle('is-open', menuOpen);
+      mobileMenu.classList.toggle('is-open', menuOpen);
+      hamburger.setAttribute('aria-expanded', menuOpen);
+      document.body.style.overflow = menuOpen ? 'hidden' : '';
+    });
+
+    function closeMobileMenu() {
+      menuOpen = false;
+      hamburger.classList.remove('is-open');
+      mobileMenu.classList.remove('is-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('click', (e) => {
+      if (menuOpen && !hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    // ── FAQ accordion
+    function toggleFAQ(trigger) {
+      const panel = trigger.nextElementSibling;
+      const isOpen = trigger.classList.contains('is-open');
+      document.querySelectorAll('.faq-trigger.is-open').forEach(t => {
+        t.classList.remove('is-open');
+        t.nextElementSibling.style.maxHeight = null;
+      });
+      if (!isOpen) {
+        trigger.classList.add('is-open');
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    }
+
+    // ── Scroll reveal
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.reveal, .reveal-fade').forEach(el => {
+      revealObserver.observe(el);
+    });
+  </script>
+
+</body>
+</html>
