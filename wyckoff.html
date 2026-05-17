@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Wyckoff Norms — อ่านตลาดให้ออก ผ่าน Accumulation และ Distribution บน XAUUSD ของจริง" />
+  <title>Wyckoff Norms — อ่านตลาดให้ออก | Social Norms</title>
+  <link rel="stylesheet" href="design-system.css" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       WYCKOFF NORMS — Page Styles
+       ไม่มี hard-coded values — ใช้ var() จาก design-system.css
+    ═══════════════════════════════════════════════════════════ */
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+    }
+
+    /* ── MINIMAL NAV ─────────────────────────────────────────── */
+    .wn-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+      background: rgba(13, 13, 13, 0);
+      border-bottom: 1px solid transparent;
+      transition: background 300ms ease, border-color 300ms ease;
+    }
+    .wn-nav.scrolled {
+      background: rgba(13, 13, 13, 0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .wn-nav-inner {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .wn-nav-brand {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .wn-nav-brand span { color: var(--amber); }
+    .wn-nav-back {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 200ms ease;
+    }
+    .wn-nav-back:hover { color: var(--text-secondary); }
+
+    /* ── HERO ────────────────────────────────────────────────── */
+    .wn-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Grain texture */
+    .wn-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    /* Ambient glow */
+    .wn-hero::after {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(212, 122, 42, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .wn-hero-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wn-hero-title {
+      font-size: clamp(52px, 9vw, 100px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wn-hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 400;
+      line-height: 1.75;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wn-hero-meta {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .wn-hero-meta-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--border-medium);
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 1;
+      animation: cue-float 2.4s ease-in-out infinite;
+    }
+
+    .scroll-cue-text {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .scroll-cue-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--border-medium), transparent);
+    }
+
+    @keyframes cue-float {
+      0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+      50%       { opacity: 0.9; transform: translateX(-50%) translateY(8px); }
+    }
+
+    /* ── INTRO PARAGRAPH ─────────────────────────────────────── */
+    .wn-intro {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 120px 24px;
+      text-align: center;
+    }
+
+    .wn-intro p {
+      font-size: clamp(18px, 2.2vw, 24px);
+      font-weight: 400;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .wn-intro strong { color: var(--text-primary); font-weight: 700; }
+    .wn-intro .amber { color: var(--amber); }
+
+    /* ── DIVIDER ─────────────────────────────────────────────── */
+    .wn-divider {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, transparent, var(--border-subtle), transparent);
+      margin: 0 auto;
+    }
+
+    /* ── PART HEADER ─────────────────────────────────────────── */
+    .wn-part-header {
+      padding: 96px 24px 48px;
+      text-align: center;
+    }
+
+    .wn-part-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 14px;
+    }
+
+    .wn-part-title {
+      font-size: clamp(40px, 6vw, 68px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      color: var(--text-primary);
+    }
+
+    .wn-part-desc {
+      margin-top: 20px;
+      font-size: 17px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── SCROLL STORY ────────────────────────────────────────── */
+    .wn-story {
+      position: relative;
+      /* height set by JS */
+    }
+
+    .wn-story-pin {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      overflow: hidden;
+      background: var(--bg-void);
+    }
+
+    /* Left: text panel */
+    .wn-story-text {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--border-subtle);
+      background: var(--bg-base);
+      overflow: hidden;
+    }
+
+    .wn-story-step {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 56px 48px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 350ms ease, transform 350ms ease;
+      pointer-events: none;
+    }
+
+    .wn-story-step.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .wn-step-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 16px;
+    }
+
+    .wn-step-title {
+      font-size: clamp(24px, 2.8vw, 36px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+    }
+
+    .wn-step-body {
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--text-secondary);
+      max-width: 360px;
+    }
+
+    /* Distribution phase — red accent */
+    .wn-story--dist .wn-step-label { color: #C0504A; }
+    .wn-story--dist .wn-story-progress .prog-dot.active {
+      background: #C0504A;
+    }
+
+    /* Right: chart panel */
+    .wn-story-chart {
+      position: relative;
+      background: var(--bg-void);
+      overflow: hidden;
+    }
+
+    .wn-story-frame {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 350ms ease;
+    }
+
+    .wn-story-frame.active { opacity: 1; }
+
+    .wn-story-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Progress dots — right edge of text panel */
+    .wn-story-progress {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .prog-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--border-medium);
+      transition: all 300ms ease;
+      flex-shrink: 0;
+    }
+
+    .prog-dot.active {
+      background: var(--amber);
+      height: 18px;
+      border-radius: 2px;
+    }
+
+    /* Step counter — bottom left of text panel */
+    .wn-story-counter {
+      position: absolute;
+      bottom: 28px;
+      left: 48px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .wn-story-counter .current { color: var(--text-secondary); }
+
+    /* ── PHASE COMPLETE BREAK ────────────────────────────────── */
+    .wn-complete {
+      padding: 140px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wn-complete::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 500px;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(212, 122, 42, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .wn-complete-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .wn-complete-title {
+      font-size: clamp(44px, 7vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+
+    .wn-complete-title .acc { color: #4A9E6A; }
+    .wn-complete-title .dist { color: #C0504A; }
+    .wn-complete-title .amber { color: var(--amber); }
+
+    .wn-complete-body {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── CYCLE CLOSE ─────────────────────────────────────────── */
+    .wn-cycle {
+      padding: 160px 24px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .wn-cycle-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 20px;
+    }
+
+    .wn-cycle-title {
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      line-height: 1.12;
+      margin-bottom: 28px;
+    }
+
+    .wn-cycle-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 40px 0 48px;
+      flex-wrap: wrap;
+    }
+
+    .flow-node {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 8px 20px;
+      border-radius: 4px;
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+    }
+
+    .flow-node.acc { border-color: rgba(74, 158, 106, 0.4); color: #6BBF87; }
+    .flow-node.markup { border-color: var(--border-amber); color: var(--amber); }
+    .flow-node.dist { border-color: rgba(192, 80, 74, 0.4); color: #D46E6A; }
+    .flow-node.markdown { border-color: var(--border-default); color: var(--text-muted); }
+
+    .flow-arrow {
+      color: var(--text-muted);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .wn-cycle-body {
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin-bottom: 56px;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────────── */
+    .wn-footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .wn-footer-brand {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .wn-footer-brand span { color: var(--amber); }
+
+    .wn-footer-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ── REVEAL ANIMATION ────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 580ms ease, transform 580ms ease;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── MOBILE ──────────────────────────────────────────────── */
+    @media (max-width: 860px) {
+      .wn-story-pin {
+        grid-template-columns: 1fr;
+        grid-template-rows: 48vh 1fr;
+      }
+
+      .wn-story-text {
+        order: 2;
+        border-right: none;
+        border-top: 1px solid var(--border-subtle);
+      }
+
+      .wn-story-chart { order: 1; }
+
+      .wn-story-step {
+        padding: 28px 28px;
+      }
+
+      .wn-story-progress { display: none; }
+      .wn-story-counter { left: 28px; bottom: 16px; }
+
+      .wn-hero-meta { gap: 16px; flex-wrap: wrap; justify-content: center; }
+      .wn-footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .wn-story-step { padding: 24px 20px; }
+      .wn-step-body { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────────────────── -->
+  <nav class="wn-nav" id="wn-nav">
+    <div class="wn-nav-inner">
+      <a href="index.html" class="wn-nav-brand">Social <span>Norms</span></a>
+      <a href="index.html" class="wn-nav-back">← กลับหน้าหลัก</a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ─────────────────────────────────────────────────── -->
+  <section class="wn-hero">
+    <p class="wn-hero-eyebrow">Wyckoff Norms</p>
+    <h1 class="wn-hero-title">อ่านตลาด<br>ให้ออก</h1>
+    <p class="wn-hero-sub">Accumulation และ Distribution<br>บนชาร์ทของจริง ทีละ element</p>
+    <div class="wn-hero-meta">
+      <span>XAUUSD</span>
+      <div class="wn-hero-meta-dot"></div>
+      <span>1H Chart</span>
+      <div class="wn-hero-meta-dot"></div>
+      <span>May 2026</span>
+    </div>
+    <div class="scroll-cue">
+      <span class="scroll-cue-text">เลื่อนลง</span>
+      <div class="scroll-cue-line"></div>
+    </div>
+  </section>
+
+  <!-- ── INTRO ────────────────────────────────────────────────── -->
+  <div class="wn-intro reveal">
+    <p>
+      ทุกการเคลื่อนที่ของราคา<strong>มี logic</strong><br>
+      ไม่ใช่ความบังเอิญ ไม่ใช่ noise<br><br>
+      <span class="amber">Wyckoff</span> สอนให้เราอ่าน fingerprint ของ Smart Money<br>
+      ก่อนราคาจะเคลื่อนที่ ไม่ใช่หลังจากที่มันเคลื่อนไปแล้ว
+    </p>
+  </div>
+
+  <div class="wn-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PART I — ACCUMULATION
+  ══════════════════════════════════════════════════════════ -->
+
+  <div class="wn-part-header reveal">
+    <p class="wn-part-label">Part I</p>
+    <h2 class="wn-part-title">Accumulation</h2>
+    <p class="wn-part-desc">Smart Money สะสม position อย่างเงียบๆ<br>ก่อนที่ราคาจะพุ่งขึ้น</p>
+  </div>
+
+  <div class="wn-story" id="story-acc">
+    <div class="wn-story-pin">
+      <div class="wn-story-text" id="acc-text">
+        <div class="wn-story-progress" id="acc-progress"></div>
+        <div class="wn-story-counter">
+          <span class="current" id="acc-cur">01</span>
+          <span> / </span>
+          <span id="acc-total">11</span>
+        </div>
+      </div>
+      <div class="wn-story-chart" id="acc-chart"></div>
+    </div>
+  </div>
+
+  <!-- Accumulation complete -->
+  <div class="wn-complete reveal">
+    <p class="wn-complete-label">Phase I สมบูรณ์</p>
+    <h2 class="wn-complete-title"><span class="acc">Accumulation</span><br>เสร็จแล้ว</h2>
+    <p class="wn-complete-body">
+      Smart Money สะสม position ครบแล้ว<br>
+      ราคาพร้อมสำหรับ Markup<br>
+      ตอนนี้ Retail กำลังจะตามไม่ทัน
+    </p>
+  </div>
+
+  <div class="wn-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PART II — DISTRIBUTION
+  ══════════════════════════════════════════════════════════ -->
+
+  <div class="wn-part-header reveal">
+    <p class="wn-part-label" style="color: #C0504A;">Part II</p>
+    <h2 class="wn-part-title">Distribution</h2>
+    <p class="wn-part-desc">Smart Money ขาย position ออกอย่างเงียบๆ<br>ขณะที่ Retail กำลังซื้อตามด้วยความกลัวตกรถ</p>
+  </div>
+
+  <div class="wn-story wn-story--dist" id="story-dist">
+    <div class="wn-story-pin">
+      <div class="wn-story-text" id="dist-text"
+           style="background: color-mix(in srgb, var(--bg-base) 97%, #C0504A 3%);">
+        <div class="wn-story-progress" id="dist-progress"></div>
+        <div class="wn-story-counter">
+          <span class="current" id="dist-cur">01</span>
+          <span> / </span>
+          <span id="dist-total">10</span>
+        </div>
+      </div>
+      <div class="wn-story-chart" id="dist-chart"></div>
+    </div>
+  </div>
+
+  <!-- Distribution complete -->
+  <div class="wn-complete reveal" style="padding-bottom: 80px;">
+    <p class="wn-complete-label">Phase II สมบูรณ์</p>
+    <h2 class="wn-complete-title"><span class="dist">Distribution</span><br>เสร็จแล้ว</h2>
+    <p class="wn-complete-body">
+      Smart Money ขาย position ออกครบแล้ว<br>
+      Markdown เริ่มต้น — Retail อยู่ฝั่งผิด
+    </p>
+  </div>
+
+  <div class="wn-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       THE CYCLE
+  ══════════════════════════════════════════════════════════ -->
+
+  <div class="wn-cycle reveal">
+    <p class="wn-cycle-label">The Full Cycle</p>
+    <h2 class="wn-cycle-title">Cycle <span style="color: var(--amber);">หมุนซ้ำ</span><br>เสมอ</h2>
+
+    <div class="wn-cycle-flow">
+      <div class="flow-node acc">Accumulation</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node markup">Markup</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node dist">Distribution</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node markdown">Markdown</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node acc">Accumulation</div>
+    </div>
+
+    <p class="wn-cycle-body">
+      นี่คือ 1 Cycle บน XAUUSD 1H<br>
+      เดียวกันนี้เกิดขึ้นทุกวัน บนทุก Timeframe<br>
+      ทุกครั้งที่ตลาดเคลื่อนที่<br><br>
+      เมื่อคุณอ่าน Cycle ออก — คุณอยู่<strong>ฝั่งเดียวกับ Smart Money</strong>
+    </p>
+  </div>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────── -->
+  <footer style="padding-bottom: 40px;">
+    <div class="wn-footer">
+      <div class="wn-footer-brand">Social <span>Norms</span></div>
+      <div class="wn-footer-note">XAUUSD · 1H · May 17, 2026 · Wyckoff + SMC</div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════
+       JAVASCRIPT
+  ══════════════════════════════════════════════════════════ -->
+  <script>
+    // ── DATA ────────────────────────────────────────────────────
+    const BASE = 'assets/wyckoff/';
+
+    const accSteps = [
+      {
+        img: 'XAUUSD_2026-05-17_16-01-31_a1f89.png',
+        label: 'PHASE 0',
+        title: 'ก่อนจะมี Accumulation',
+        body: 'Break of Structure คือสัญญาณแรกว่า Downtrend เริ่มอ่อนแรง ราคาทำ Higher Low ครั้งแรก บอกว่า momentum ขาลงกำลังสิ้นสุด ยังไม่มีการสะสม แต่เวทีถูกจัดแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-02-10_604ea.png',
+        label: 'STEP 1 — PS',
+        title: 'Preliminary Support',
+        body: 'แรงซื้อเริ่มปรากฏเป็นครั้งแรก Volume เพิ่มขึ้นเมื่อราคาลง แต่ยังไม่พอหยุดราคาอย่างแท้จริง นี่คือรอยพิมพ์มือแรกของ Smart Money — เริ่มทดสอบว่า Supply มีมากแค่ไหน'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-03-19_cf42d.png',
+        label: 'STEP 1b — PS',
+        title: 'PS อาจเกิดซ้ำ',
+        body: 'Preliminary Support ไม่จำเป็นต้องเกิดแค่ครั้งเดียว ราคาหาพื้นได้หลายรอบก่อนจะเจอ Selling Climax แต่ละครั้งเป็นการดูดซับ Supply ทีละชั้น'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-03-58_02165.png',
+        label: 'STEP 2 — SC',
+        title: 'Selling Climax',
+        body: 'จุดพีคของความกลัว ราคาร่วงแรงบน Volume สูงที่สุดใน Downtrend Retail ขายสุดมือ Smart Money รับซื้อทุก lot ที่ถูกทิ้งออกมา ณ จุดนี้ Supply เกือบหมดแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-04-45_beb5c.png',
+        label: 'STEP 3 — AR',
+        title: 'Automatic Rally',
+        body: 'หลัง SC แรงขายหมดทันที ราคาดีดตัวขึ้นอย่างรวดเร็วโดยไม่มีเหตุผลชัดเจน จุดสูงสุดของ AR กลายเป็น Resistance ของ Trading Range — กรอบบนถูกกำหนดแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-05-07_14bc3.png',
+        label: 'STEP 4 — ST',
+        title: 'Secondary Test',
+        body: 'ราคากลับมาทดสอบโซน SC อีกครั้ง แต่ Volume ต่ำกว่าอย่างชัดเจน สัญญาณว่า Supply เหลือน้อยลงแล้ว Smart Money ยังดูดซับ แต่ใกล้เสร็จแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-05-17_a2a7f.png',
+        label: 'STEP 4b — UA',
+        title: 'Upward Action',
+        body: 'ราคาพยายามทำ Higher High ภายใน Trading Range ยืนยันกรอบ TR ด้านบน เป็นการทดสอบว่า Supply เหนือ AR ยังแข็งแกร่งแค่ไหน ก่อนกลับลงมาทดสอบฐานอีกครั้ง'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-05-36_ce398.png',
+        label: 'STEP 5 — STb',
+        title: 'Secondary Test ที่ฐาน',
+        body: 'ราคากลับลงมาทดสอบโซน SC บน Volume ต่ำ ยืนยันว่า Smart Money ยังรับซื้อทุกครั้งที่ราคาลง Supply ที่เหลือถูกดูดซับเกือบหมดแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-06-07_e4759.png',
+        label: 'STEP 6 — SPRING',
+        title: 'Spring',
+        body: 'การหลอกล่อที่สำคัญที่สุด ราคาหลุดต่ำกว่าฐาน Trading Range ชั่วคราว ดักตัด Stop Loss ของ Retail ก่อนพุ่งกลับขึ้นทันที Volume ต่ำ บอกว่าไม่มี Supply จริงๆ เหลืออยู่'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-06-32_effad.png',
+        label: 'STEP 7 — TEST',
+        title: 'Test ของ Spring',
+        body: 'ราคากลับมาทดสอบแนว Spring บน Volume ต่ำมาก ยืนยันว่า Supply หมดแล้วจริงๆ Smart Money สะสมครบ พร้อมปล่อยราคาขึ้น'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-06-42_f0669.png',
+        label: 'COMPLETE',
+        title: 'Accumulation สมบูรณ์',
+        body: 'ทุก element ปรากฏครบ BOS → PS → SC → AR → ST → SPRING → TEST Smart Money ถือ position เต็มแล้ว ราคาพร้อมสำหรับ Markup'
+      }
+    ];
+
+    const distSteps = [
+      {
+        img: 'XAUUSD_2026-05-17_16-07-16_de111.png',
+        label: 'PHASE 2 — MARKUP',
+        title: 'Markup เริ่มต้น',
+        body: 'Smart Money ปล่อยราคาขึ้นหลัง Accumulation สมบูรณ์ ราคาพุ่งแรงดึงดูด FOMO เข้าซื้อตาม ขณะเดียวกัน Smart Money เริ่มขายออกอย่างเงียบๆ'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-07-19_fc82b.png',
+        label: 'STEP 1 — PSY',
+        title: 'Preliminary Supply',
+        body: 'แรงขายเริ่มเข้ามาต้านราคา Volume เพิ่มขึ้น แต่ราคายังขึ้นต่อได้ นี่คือ footprint แรกของ Distribution ที่ Retail ส่วนใหญ่มองข้ามไป'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-07-41_0c940.png',
+        label: 'STEP 2 — BC',
+        title: 'Buying Climax',
+        body: 'จุดสูงสุดของ Markup FOMO รุนแรงที่สุด Retail ซื้อสุดมือ Smart Money ขายออกทุก lot ที่มีคนรับ Volume พุ่งสูง ราคาพุ่งแรง — แต่นี่คือจุดจบของขาขึ้น'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-08-06_f881a.png',
+        label: 'STEP 3 — AR',
+        title: 'Automatic Reaction',
+        body: 'หลัง BC แรงซื้อหมดทันที ราคาร่วงลงอย่างรวดเร็ว จุดต่ำสุดของ AR กลายเป็น Support ของ Distribution Range — กรอบล่างถูกกำหนดแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-08-23_3cc53.png',
+        label: 'STEP 4 — ST',
+        title: 'Secondary Test ที่ยอด',
+        body: 'ราคากลับขึ้นไปทดสอบแถว BC อีกครั้ง แต่ Volume ต่ำกว่า บอกว่าแรงซื้อหมดแล้ว Supply ยังอยู่ เพดานถูกยืนยัน'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-08-35_72c53.png',
+        label: 'STEP 5 — mSOW',
+        title: 'Minor Sign of Weakness',
+        body: 'ราคาร่วงทะลุฐาน Distribution Range เล็กน้อย เริ่มเห็น Weakness อย่างชัดเจน Structure ขาลงเริ่มก่อตัว เตือนว่า Markdown กำลังจะมา'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-08-48_df09c.png',
+        label: 'STEP 6 — UT',
+        title: 'Upthrust',
+        body: 'การหลอกล่อขาขึ้น ราคาพุ่งเหนือ Resistance แล้วปิดต่ำกว่าทันที ดักตัด Stop Buy ของ Retail ก่อนร่วงลง คนที่รอ Breakout ติดกับ'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-09-00_d49a8.png',
+        label: 'STEP 7 — UTAD',
+        title: 'Upthrust After Distribution',
+        body: 'การหลอกล่อครั้งสุดท้ายก่อน Markdown จะเริ่ม ราคาพุ่งขึ้นอีกครั้งเพื่อดักคนที่รอ Breakout Smart Money ขายออก lot สุดท้าย'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-09-20_2099a.png',
+        label: 'STEP 8 — SOW',
+        title: 'Sign of Weakness',
+        body: 'ราคาร่วงหนักทะลุฐาน Distribution Range อย่างชัดเจน Distribution สมบูรณ์ Markdown เริ่มต้นแล้ว — Smart Money ขายออกหมดแล้ว'
+      },
+      {
+        img: 'XAUUSD_2026-05-17_16-09-56_13d10.png',
+        label: 'COMPLETE',
+        title: 'Distribution สมบูรณ์',
+        body: 'ทุก element ปรากฏครบ PSY → BC → AR → ST → UT → UTAD → SOW Cycle หมุนครบรอบ Accumulation → Markup → Distribution → Markdown'
+      }
+    ];
+
+    // ── BUILD STORY ─────────────────────────────────────────────
+    function buildStory(sectionId, textId, chartId, progressId, curId, totalId, steps, accentColor) {
+      const section  = document.getElementById(sectionId);
+      const textEl   = document.getElementById(textId);
+      const chartEl  = document.getElementById(chartId);
+      const progEl   = document.getElementById(progressId);
+      const curEl    = document.getElementById(curId);
+      const totalEl  = document.getElementById(totalId);
+
+      totalEl.textContent = String(steps.length).padStart(2, '0');
+
+      // Set scroll height: n_frames × 100vh
+      section.style.height = `${steps.length * 100}vh`;
+
+      // Build text steps
+      steps.forEach((step, i) => {
+        const div = document.createElement('div');
+        div.className = `wn-story-step${i === 0 ? ' active' : ''}`;
+        div.dataset.index = i;
+        div.innerHTML = `
+          <p class="wn-step-label" style="${accentColor ? `color:${accentColor}` : ''}">${step.label}</p>
+          <h3 class="wn-step-title">${step.title}</h3>
+          <p class="wn-step-body">${step.body}</p>
+        `;
+        textEl.insertBefore(div, progEl);
+      });
+
+      // Build chart frames (preload all as Image objects first)
+      steps.forEach((step, i) => {
+        // Preload
+        const preload = new Image();
+        preload.src = BASE + step.img;
+
+        const frame = document.createElement('div');
+        frame.className = `wn-story-frame${i === 0 ? ' active' : ''}`;
+        frame.dataset.index = i;
+        const img = document.createElement('img');
+        img.src = BASE + step.img;
+        img.alt = step.title;
+        frame.appendChild(img);
+        chartEl.appendChild(frame);
+      });
+
+      // Build progress dots
+      steps.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = `prog-dot${i === 0 ? ' active' : ''}`;
+        if (accentColor) dot.style.cssText = i === 0 ? `background:${accentColor}; height:18px; border-radius:2px;` : '';
+        progEl.appendChild(dot);
+      });
+
+      return { section, textEl, chartEl, progEl, curEl, steps, accentColor };
+    }
+
+    // ── SCROLL DRIVER ────────────────────────────────────────────
+    function initDriver({ section, textEl, chartEl, progEl, curEl, steps, accentColor }) {
+      const textSteps = textEl.querySelectorAll('.wn-story-step');
+      const frames    = chartEl.querySelectorAll('.wn-story-frame');
+      const dots      = progEl.querySelectorAll('.prog-dot');
+      const n         = steps.length;
+      let current     = 0;
+
+      function setFrame(idx) {
+        if (idx === current) return;
+
+        textSteps[current].classList.remove('active');
+        frames[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        if (accentColor) dots[current].style.cssText = '';
+
+        current = idx;
+
+        textSteps[current].classList.add('active');
+        frames[current].classList.add('active');
+        dots[current].classList.add('active');
+        if (accentColor) {
+          dots[current].style.cssText = `background:${accentColor}; height:18px; border-radius:2px;`;
+        }
+
+        curEl.textContent = String(current + 1).padStart(2, '0');
+      }
+
+      return function tick() {
+        const rect       = section.getBoundingClientRect();
+        const scrollable = section.offsetHeight - window.innerHeight;
+
+        if (rect.top > 0 || rect.bottom < window.innerHeight) return;
+
+        const progress = Math.max(0, Math.min(1, -rect.top / scrollable));
+        const idx      = Math.min(Math.floor(progress * n), n - 1);
+        setFrame(idx);
+      };
+    }
+
+    // ── INIT ─────────────────────────────────────────────────────
+    const acc  = buildStory('story-acc',  'acc-text',  'acc-chart',  'acc-progress',  'acc-cur',  'acc-total',  accSteps,  null);
+    const dist = buildStory('story-dist', 'dist-text', 'dist-chart', 'dist-progress', 'dist-cur', 'dist-total', distSteps, '#C0504A');
+
+    const tickAcc  = initDriver(acc);
+    const tickDist = initDriver(dist);
+
+    // ── NAV scroll state ─────────────────────────────────────────
+    const nav = document.getElementById('wn-nav');
+    function onScroll() {
+      tickAcc();
+      tickDist();
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // initial call
+
+    // ── REVEAL on scroll ─────────────────────────────────────────
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => io.observe(el));
+  </script>
+
+</body>
+</html>
